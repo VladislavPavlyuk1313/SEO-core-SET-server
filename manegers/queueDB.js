@@ -1,6 +1,6 @@
 const {downloadListModel} = require('../helpers/schema.js');
 const {getNormalizedDate} = require('../helpers/functions');
-const {downloadMeneger}=require('./ReportsDB')
+const {downloadMeneger}=require('./ReportsDB');
 /**
  * Функція повертає скільки мілісекунд залишилося до наступного разу, коли на годиннику буде 05:00
  * (в цей час щодня завантажуються заплановані звіти CrUX)

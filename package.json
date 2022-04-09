@@ -1,0 +1,43 @@
+{
+  "name": "seo-core-set",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladislavPavlyuk1313/SEO-core-SET-server.git"
+  },
+  "keywords": [
+    "SEO",
+    "WEB",
+    "vitals",
+    "CLS",
+    "FCP",
+    "FID",
+    "LCP"
+  ],
+  "author": "Vladislav Pavlyuk (vlad_pavlyuk_@ukr.net)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladislavPavlyuk1313/SEO-core-SET-server/issues"
+  },
+  "homepage": "https://github.com/VladislavPavlyuk1313/SEO-core-SET-server#readme",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.20.0",
+    "express": "^4.17.3",
+    "koa": "^2.13.4",
+    "koa-body": "^4.2.0",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0",
+    "mongoose": "4.10.8",
+    "node-fetch": "2.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}

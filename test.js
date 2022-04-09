@@ -58,14 +58,17 @@ const app = new Koa();
 
 app.use(
     router
+        .get('/', (ctx) => {
+            ctx.body = 'Привіт'
+        })
         .get('/history', async (ctx) => {
             const response = await axios.post('http://localhost:8080/history',
                 {urlAdress:"https://chernigiv-rada.gov.ua/gumsfera-zaklady-osvity/"});
             ctx.body = response.data
         })
-        .get('/get-reports', async (ctx) =>{
+        .get('/reports', async (ctx) =>{
             console.time('48 урлів')
-            const response = await axios.post('http://localhost:8080/get-reports',{downloadDaily:true, urls:urls});
+            const response = await axios.post('http://localhost:8080/reports',{downloadDaily:true, urls:urls});
             console.timeEnd('48 урлів')
             ctx.body = response.data
         }).middleware())

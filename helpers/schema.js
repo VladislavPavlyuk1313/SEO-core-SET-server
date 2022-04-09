@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-const connection = mongoose.createConnection("localhost", "test_1243", 27017, {
+const connection = mongoose.createConnection("localhost", "test_124573", 27017, {
     server: {
         socketOptions: {
             socketTimeoutMS: 0,
@@ -8,7 +8,13 @@ const connection = mongoose.createConnection("localhost", "test_1243", 27017, {
         }
     }
 });
-
+let FeedbackSchema = new Schema(
+    {
+        date: {type: String},
+        message: {type: String},
+        userEmail: {type: String}
+    }
+)
 let DownloadListSchema = new Schema(
     {
         urlAdress: {type: String},
@@ -29,5 +35,6 @@ let ReportSchema = new Schema(
 
 let downloadListModel = connection.model('DownloadList', DownloadListSchema);
 let reportModel = connection.model('Reports', ReportSchema);
+let feedbackModel = connection.model('Feedback', FeedbackSchema);
 
-module.exports = {reportModel, downloadListModel}
+module.exports = {reportModel, downloadListModel, feedbackModel}
