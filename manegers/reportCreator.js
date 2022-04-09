@@ -1,6 +1,6 @@
 const {reportModel} = require("../helpers/schema");
 const {getAverageValues, getSortWeight, sortHistory} = require('../helpers/functions');
-const {getTodaysReport, downloadMeneger} = require('../manegers/ReportsDB');
+const {getTodaysReport} = require('../manegers/ReportsDB');
 /**
  * Функція повертає усі записи про даний URL, які є в БД
  * @param {String} URLAdress - URL адреса зіт за якою необхідно заантажити
@@ -19,13 +19,11 @@ const getHistiryOfReports = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') =
 }
 const createReportsList = async (URLsList, formFactor) => {
     let reportsList = [];
-    await downloadMeneger(URLsList,formFactor)
     for (URLAdress of URLsList){
         reportsList.push(await getTodaysReport(URLAdress, formFactor))
     }
     reportsList.sort((a,b)=>{
-        const c = getSortWeight(b)-getSortWeight(a)
-        return c
+        return  getSortWeight(b)-getSortWeight(a)
     })
     return {
         average : getAverageValues(reportsList),

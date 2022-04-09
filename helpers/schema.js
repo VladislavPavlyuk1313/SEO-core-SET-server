@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-const connection = mongoose.createConnection("localhost", "test_124573", 27017, {
-    server: {
-        socketOptions: {
-            socketTimeoutMS: 0,
-            connectTimeoutMS: 0
-        }
-    }
-});
+const connection = mongoose.connect("mongodb://localhost:27017/test")
 let FeedbackSchema = new Schema(
     {
         date: {type: String},
@@ -33,8 +26,8 @@ let ReportSchema = new Schema(
         collection: 'Reports'
     });
 
-let downloadListModel = connection.model('DownloadList', DownloadListSchema);
-let reportModel = connection.model('Reports', ReportSchema);
-let feedbackModel = connection.model('Feedback', FeedbackSchema);
+let downloadListModel = mongoose.model('DownloadList', DownloadListSchema);
+let reportModel = mongoose.model('Reports', ReportSchema);
+let feedbackModel = mongoose.model('Feedback', FeedbackSchema);
 
 module.exports = {reportModel, downloadListModel, feedbackModel}

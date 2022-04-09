@@ -34,7 +34,7 @@
     "koa-body": "^4.2.0",
     "koa-bodyparser": "^4.3.0",
     "koa-router": "^10.0.0",
-    "mongoose": "4.10.8",
+    "mongoose": "^6.2.10",
     "node-fetch": "2.6.7"
   },
   "devDependencies": {

@@ -197,11 +197,6 @@ const sortHistory = (report1, report2) => {
     time2 = new Date(report2.date).getTime()
     return time2 - time1
 }
-const testData = [10,20,50,90,150,200,250,400,450,500,700]
-testData.forEach((el) => {
-
-    console.log(el/1000, getCLSScore(el/1000))
-})
 module.exports = {
     getSortWeight,
     getNormalizedDate,
