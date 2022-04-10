@@ -4,9 +4,12 @@ const {getHistoryController} = require('./controllers/history');
 const {getFeedbackController, addFeedbackController} = require('./controllers/feedback');
 const {getReportsController, postReportsController} = require('./controllers/reports');
 const {downloadOnSchedule} = require('./manegers/queueDB')
+const cors = require('cors')
 
 const app = new express();
+app.use(cors())
 app.use(bodyParser.json());
+
 app.post('/feedback', getFeedbackController)
 app.get('/feedback', addFeedbackController)
 app.post('/reports', postReportsController)

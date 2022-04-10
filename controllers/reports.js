@@ -31,7 +31,7 @@ const postReportsController = (req, res) =>{
         addToDownloadList(urls);
     }
     downloadMeneger(urls, 'ALL_FORM_FACTORS', id)
-    console.log(new Date(), 'відправлений статус')
+    console.log(new Date(), 'отримав запит id: ', id)
     res.send({id:id})
 }
 

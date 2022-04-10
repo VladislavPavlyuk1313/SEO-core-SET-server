@@ -21,9 +21,8 @@ const downloadMeneger = async (downloadList, formFactor, id) => {
     }
     await Promise.allSettled(promiseList)
     reportModel.replaceOne({id:id}, {status: 'done'})
-    console.log("подія")
     emitter.emit(id)
-    console.log(new Date(), 'завантажено', id)
+    console.log(new Date(), 'Опрацював запит id', id)
 }
 
 
