@@ -56,6 +56,17 @@ const urls = [
 const downloadFlag = true
 const app = new Koa();
 
+const download = async (id) => {
+    let response;
+    try {
+        response = await axios.get('http://localhost:8080/reports',{headers:{'Xid':id}})
+    }catch (e) {
+        console.log(e)
+        response = download(id)
+    }
+    return response
+}
+
 app.use(
     router
         .get('/', (ctx) => {
@@ -67,9 +78,11 @@ app.use(
             ctx.body = response.data
         })
         .get('/reports', async (ctx) =>{
-            console.time('48 урлів')
-            const response = await axios.post('http://localhost:8080/reports',{downloadDaily:true, urls:urls});
-            console.timeEnd('48 урлів')
+            //передаєш URL'и на сервер і як відповідь отримуєш id свого запиту
+            const {data} = await axios.post('http://localhost:8080/reports',{downloadDaily:true, urls:urls});
+            const id = data.id;
+            //По id отримуєш відповідь на свій запит
+            const response = await download(id);
             ctx.body = response.data
         }).middleware())
 

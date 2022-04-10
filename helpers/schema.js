@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-const connection = mongoose.connect("mongodb://localhost:27017/test")
+mongoose.connect("mongodb://localhost:27017/test212")
+let ReportSchema = new Schema(
+    {
+        id: {type: Number},
+        urlAdresses: {type: Array},
+        formFactor: {type: String},
+        status: {type: String}
+    }
+)
 let FeedbackSchema = new Schema(
     {
         date: {type: String},
@@ -16,7 +24,8 @@ let DownloadListSchema = new Schema(
         collection: 'DownloadList'
     })
 
-let ReportSchema = new Schema(
+
+let HistorySchema = new Schema(
     {
         urlAdress: {type: String},
         date: {type: String},
@@ -27,7 +36,8 @@ let ReportSchema = new Schema(
     });
 
 let downloadListModel = mongoose.model('DownloadList', DownloadListSchema);
-let reportModel = mongoose.model('Reports', ReportSchema);
+let historyModel = mongoose.model('Reports', HistorySchema);
 let feedbackModel = mongoose.model('Feedback', FeedbackSchema);
+let reportModel = mongoose.model('report', ReportSchema);
 
-module.exports = {reportModel, downloadListModel, feedbackModel}
+module.exports = {historyModel, downloadListModel, feedbackModel, reportModel}

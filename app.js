@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.post('/feedback', getFeedbackController)
 app.get('/feedback', addFeedbackController)
 app.post('/reports', postReportsController)
-app.post('/get-reports', getReportsController)
+app.get('/reports', getReportsController)
 app.post('/history', getHistoryController)
 
 

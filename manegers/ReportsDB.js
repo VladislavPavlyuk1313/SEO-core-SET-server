@@ -1,19 +1,29 @@
 const fetch = require("node-fetch");
-const {reportModel} = require('../helpers/schema.js');
+const {reportModel, historyModel} = require('../helpers/schema.js');
 const {getNormalizedDate, prepareReport} = require('../helpers/functions');
-
-
+const Emitter = require('events')
+let emitter = new Emitter()
 /**
  @param {[Object]} downloadList  - Cписок об'єктів у кожного з яких є поля 'urlAress' та 'formFactor'
  @param {String} downloadList[].urlAress - URL адреса зіт за якою необхідно заантажити
  @param {String} downloadList[].formFactor - формфактор. 'ALL_FORM_FACTORS', 'PHONE', 'DESKTOP' або 'TABLET'* @returns {Promise<void>}
  */
-const downloadMeneger = async (downloadList, formFactor) => {
+const downloadMeneger = async (downloadList, formFactor, id) => {
+    await (new reportModel({
+        id: id,
+        urlAdresses: downloadList,
+        formFactor: formFactor,
+        status: 'in processing'
+    })).save();
     promiseList = []
     for (let element of downloadList) {
           promiseList.push(downloadCrUXReport(element, formFactor))
     }
     await Promise.allSettled(promiseList)
+    reportModel.replaceOne({id:id}, {status: 'done'})
+    console.log("подія")
+    emitter.emit(id)
+    console.log(new Date(), 'завантажено', id)
 }
 
 
@@ -26,7 +36,7 @@ const downloadMeneger = async (downloadList, formFactor) => {
  */
 const isTodaysReportInDB = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') => {
     const currentDate = getNormalizedDate(Date.now())
-    const report = await reportModel.findOne({"urlAdress": URLAdress, "date": currentDate, 'formFactor': formFactor})
+    const report = await historyModel.findOne({"urlAdress": URLAdress, "date": currentDate, 'formFactor': formFactor})
     return Boolean(report)
 }
 /**
@@ -45,7 +55,7 @@ const downloadCrUXReport = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') =>
         const report = await responseFromCrUX.json();
         const currentDate = getNormalizedDate(Date.now())
         const preparedReport = prepareReport(report, URLAdress, currentDate, formFactor)
-        await (new reportModel(preparedReport)).save();
+        await (new historyModel(preparedReport)).save();
     }
 }
 /**
@@ -56,7 +66,7 @@ const downloadCrUXReport = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') =>
  */
 const getTodaysReport = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') => {
     const currentDate = getNormalizedDate(Date.now())
-    const report = await reportModel.findOne({
+    const report = await historyModel.findOne({
         'urlAdress': URLAdress, 'date': currentDate, 'formFactor': formFactor
     },{
         'urlAdress': 1, 'date': 1, 'formFactor': 1, 'record': 1 , _id : 0
@@ -73,7 +83,8 @@ const getTodaysReport = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') => {
 }
 module.exports = {
     getTodaysReport,
-    downloadMeneger
+    downloadMeneger,
+    emitter
 }
 
 
