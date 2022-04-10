@@ -1,4 +1,4 @@
-const {reportModel} = require("../helpers/schema");
+const {historyModel} = require("../helpers/schema");
 const {getAverageValues, getSortWeight, sortHistory} = require('../helpers/functions');
 const {getTodaysReport} = require('../manegers/ReportsDB');
 /**
@@ -8,12 +8,13 @@ const {getTodaysReport} = require('../manegers/ReportsDB');
  */
 const getHistiryOfReports = async (URLAdress, formFactor = 'ALL_FORM_FACTORS') => {
     let listOfReports = []
-    const reports = await reportModel.find({
+    const reports = await historyModel.find({
         'urlAdress': URLAdress, 'formFactor': formFactor
     }, {
         'urlAdress': 1, 'date': 1, 'formFactor': 1, 'record': 1, _id: 0
     })
     reports.forEach(report => listOfReports.push(report._doc))
+    console.log(reports)
     listOfReports.sort(sortHistory)
     return listOfReports
 }

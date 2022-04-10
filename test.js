@@ -74,7 +74,7 @@ app.use(
         })
         .get('/history', async (ctx) => {
             const response = await axios.post('http://localhost:8080/history',
-                {urlAdress:"https://chernigiv-rada.gov.ua/gumsfera-zaklady-osvity/"});
+                {urlAdress:"http://www.home-poster.net/ua/house/Ivano-Frankivska/"});
             ctx.body = response.data
         })
         .get('/reports', async (ctx) =>{
