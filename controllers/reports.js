@@ -6,18 +6,19 @@ const {reportModel} = require('../helpers/schema');
 
 
 const getReportsController = async (req, res) =>{
-    const id  = req.headers.xid
-    const downloadList = await reportModel.findOne({id:id}, {urlAdresses:1, fornFator:1, status:1})
+    const requestId  = req.headers.xid
+    const downloadList = await reportModel.findOne({requestId:requestId}, {urlAdresses:1, fornFator:1, status:1})
     const {urlAdresses, formFactor, status} = downloadList._doc
-    console.log(status)
     if (status === 'done'){
         res.send(await createReportsList(urlAdresses, formFactor));
     }else {
-        console.log('жду подію', id)
-        emitter.on(id, async () => {
-            console.log('зайшов в подію')
-            const downloadList = await reportModel.findOne({id:id}, {urlAdresses:1, fornFator:1})
+        console.log('жду подію', requestId)
+        emitter.on(requestId, async () => {
+            console.log('зайшов в подію', requestId)
+            console.log((await reportModel.find({}))._docs)
+            const downloadList = await reportModel.findOne({requestId:requestId}, {urlAdresses:1, fornFator:1})
             const {urlAdresses, formFactor} = downloadList._doc
+            console.log('надіслав відповідь', requestId)
             res.send(await createReportsList(urlAdresses, formFactor));
         })
     }

@@ -10,17 +10,24 @@ let emitter = new Emitter()
  */
 const downloadMeneger = async (downloadList, formFactor, id) => {
     await (new reportModel({
-        id: id,
+        requestId: id,
         urlAdresses: downloadList,
         formFactor: formFactor,
         status: 'in processing'
     })).save();
+    console.log('додав запис', id);
     promiseList = []
     for (let element of downloadList) {
           promiseList.push(downloadCrUXReport(element, formFactor))
     }
     await Promise.allSettled(promiseList)
-    reportModel.replaceOne({id:id}, {status: 'done'})
+    await reportModel.deleteOne({requestId:id})
+    await (new reportModel({
+        requestId: id,
+        urlAdresses: downloadList,
+        formFactor: formFactor,
+        status: 'done'
+    })).save();
     emitter.emit(id)
     console.log(new Date(), 'Опрацював запит id', id)
 }

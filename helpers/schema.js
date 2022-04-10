@@ -3,7 +3,7 @@ let Schema = mongoose.Schema;
 mongoose.connect("mongodb://localhost:27017/test212")
 let ReportSchema = new Schema(
     {
-        id: {type: Number},
+        requestId: {type: Number},
         urlAdresses: {type: Array},
         formFactor: {type: String},
         status: {type: String}
@@ -39,5 +39,9 @@ let downloadListModel = mongoose.model('DownloadList', DownloadListSchema);
 let historyModel = mongoose.model('Reports', HistorySchema);
 let feedbackModel = mongoose.model('Feedback', FeedbackSchema);
 let reportModel = mongoose.model('report', ReportSchema);
+(async ()=>{
+
+    console.log((await reportModel.find({}))._docs)
+})()
 
 module.exports = {historyModel, downloadListModel, feedbackModel, reportModel}
