@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 let Schema = mongoose.Schema;
-mongoose.connect("mongodb://localhost:27017/test212")
+mongoose.connect("mongodb://localhost:27017/seo-core-set")
 let ReportSchema = new Schema(
     {
         requestId: {type: Number},
@@ -39,9 +39,8 @@ let downloadListModel = mongoose.model('DownloadList', DownloadListSchema);
 let historyModel = mongoose.model('Reports', HistorySchema);
 let feedbackModel = mongoose.model('Feedback', FeedbackSchema);
 let reportModel = mongoose.model('report', ReportSchema);
-(async ()=>{
 
-    console.log((await reportModel.find({}))._docs)
-})()
+
+
 
 module.exports = {historyModel, downloadListModel, feedbackModel, reportModel}

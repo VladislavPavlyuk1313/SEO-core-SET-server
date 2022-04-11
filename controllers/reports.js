@@ -8,8 +8,8 @@ const {reportModel} = require('../helpers/schema');
 const getReportsController = async (req, res) =>{
     const requestId  = req.headers.xid
     const downloadList = await reportModel.findOne({requestId:requestId}, {urlAdresses:1, fornFator:1, status:1})
-    const {urlAdresses, formFactor, status} = downloadList._doc
-    if (status === 'done'){
+    if (downloadList?._doc?.status === 'done'){
+        const {urlAdresses, formFactor} = downloadList._doc
         res.send(await createReportsList(urlAdresses, formFactor));
     }else {
         console.log('жду подію', requestId)
@@ -27,11 +27,12 @@ const getReportsController = async (req, res) =>{
 }
 const postReportsController = (req, res) =>{
     const id = Date.now();
-    const {downloadDaily, urls}  = req.body
+    const {downloadDaily, urls, formFactor}  = req.body
     if (downloadDaily){
         addToDownloadList(urls);
     }
-    downloadMeneger(urls, 'ALL_FORM_FACTORS', id)
+    console.log(urls)
+    downloadMeneger(urls, formFactor, id)
     console.log(new Date(), 'отримав запит id: ', id)
     res.send({id:id})
 }

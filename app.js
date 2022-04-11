@@ -10,8 +10,8 @@ const app = new express();
 app.use(cors())
 app.use(bodyParser.json());
 
-app.post('/feedback', getFeedbackController)
-app.get('/feedback', addFeedbackController)
+app.post('/feedback', addFeedbackController)
+app.get('/feedback', getFeedbackController)
 app.post('/reports', postReportsController)
 app.get('/reports', getReportsController)
 app.post('/history', getHistoryController)

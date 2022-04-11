@@ -1,10 +1,3 @@
-/**
- * Функція приймає час, коли було отримано звіт CrUX і повертає дату, коли його було сформоввно.
- *
- * Звіти CrUX оновлюються щодня о 04:00 UTC
- * @param {Number} time - час у форматі кількості мілісекунд що пройшли від 01.01.1970 00:00:00:000 UTC
- * @returns {string} - cтрокое предсталення дати (Наприклад 'Tue Apr 05 2022')
- */
 const getNormalizedDate = (time) => {
 
     const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;//getTimezoneOffset() повертає зміщення в хвилинах.
@@ -17,11 +10,6 @@ const getNormalizedDate = (time) => {
 
     return new Date(normalizedTime).toDateString();
 }
-/**
- * У звіті від CrUX усі метрики мають усі числовий тип, а CLS метрики - стрічки. Дана функція привоить метрики CLS до числового типу
- * @param cls
- * @returns {*}
- */
 const fixCLS = (cls) => {
     cls.percentiles.p75 = Number(cls.percentiles.p75)
     cls.histogram.forEach((element) => {
@@ -30,103 +18,93 @@ const fixCLS = (cls) => {
     })
     return cls
 }
-/**
- * Функція на основі метрик розраховує загальну оцінку продуктивності сторінки по шкалі від 0 до 100
- * @param metrics
- * @returns {number}
- */
 const getScore = (metrics) => {
-    if (metrics.fid.percentiles.p75){
+    if (metrics.fid.percentiles.p75) {
         const lcp = getLCPScore(metrics.lcp.percentiles.p75);
         const fid = getFIDScore(metrics.fid.percentiles.p75);
         const cls = getCLSScore(metrics.lcp.percentiles.p75);
-        return  0.4 * lcp + 0.35 * fid + 0.25 * cls;
+        return 0.4 * lcp + 0.35 * fid + 0.25 * cls;
     } else {
         const lcp = getLCPScore(metrics.lcp.percentiles.p75);
         const cls = getCLSScore(metrics.lcp.percentiles.p75);
-        return  0.6 * lcp+ 0.4 * cls;
+        return 0.6 * lcp + 0.4 * cls;
     }
 }
 const getCLSScore = (cls) => {
     const func = {
-        first_part : (x) => {
+        first_part: (x) => {
             return Math.floor(100 - 200000 * x * x / 81)
         },
-        second_part : (x) => {
-            return Math.floor(- 40 / 110 * (1000*x - 310))
+        second_part: (x) => {
+            return Math.floor(-40 / 110 * (1000 * x - 310))
         },
-        third_part : (x) => {
+        third_part: (x) => {
             return Math.floor(4000 / (1000 * x - 128) - 10)
         }
     }
-    if (cls < 0.09){
+    if (cls < 0.09) {
         return func.first_part(cls);
     }
-    if (cls < 0.23){
+    if (cls < 0.23) {
         return func.second_part(cls);
     }
-    if (cls < 0.5){
+    if (cls < 0.5) {
         return func.third_part(cls);
     }
-    if (cls >= 0.5){
+    if (cls >= 0.5) {
         return 0;
     }
 }
 const getLCPScore = (lcp) => {
     const func = {
-        first_part : (x) => {
+        first_part: (x) => {
             return Math.floor(100 - 20 * x * x / 6250000)
         },
-        second_part : (x) => {
-            return Math.floor( 440 / 3 - 4 * x / 150 )
+        second_part: (x) => {
+            return Math.floor(440 / 3 - 4 * x / 150)
         },
-        third_part : (x) => {
+        third_part: (x) => {
             return Math.floor(1100000 / (11 * x - 240000) - 15)
         }
     }
-    if (lcp < 2500){
+    if (lcp < 2500) {
         return func.first_part(lcp);
     }
-    if (lcp < 4000){
+    if (lcp < 4000) {
         return func.second_part(lcp);
     }
-    if (lcp < 8500){
+    if (lcp < 8500) {
         return func.third_part(lcp);
     }
-    if (lcp >= 8500){
+    if (lcp >= 8500) {
         return 0;
     }
 }
 const getFIDScore = (fid) => {
     const func = {
-        first_part : (x) => {
+        first_part: (x) => {
             return Math.floor(100 - 20 * x * x / 8100)
         },
-        second_part : (x) => {
-            return Math.floor(- 4 / 11 * (x - 310))
+        second_part: (x) => {
+            return Math.floor(-4 / 11 * (x - 310))
         },
-        third_part : (x) => {
+        third_part: (x) => {
             return Math.floor(4000 / (x - 128) - 10)
         }
     }
-    if (fid < 90){
+    if (fid < 90) {
         return func.first_part(fid);
     }
-    if (fid < 230){
+    if (fid < 230) {
         return func.second_part(fid);
     }
-    if (fid < 500){
+    if (fid < 500) {
         return func.third_part(fid);
     }
-    if (fid >= 500){
+    if (fid >= 500) {
         return 0;
     }
 }
-/**
- * Функція розраховує середні значення усіх метрик зі списку звітів
- * @param reportsList
- * @returns {{fid: number, score: number, lcp: number, cls: number}}
- */
 const getAverageValues = (reportsList) => {
     let counter = 0;
     let fidCounter = 0
@@ -134,9 +112,9 @@ const getAverageValues = (reportsList) => {
     let clsSum = 0;
     let lcpSum = 0;
     let scoreSum = 0;
-    reportsList.forEach((report) =>{
-        if (report.record.metrics){
-            if (report.record.metrics.fid?.percentiles.p75){
+    reportsList.forEach((report) => {
+        if (report.record.metrics) {
+            if (report.record.metrics.fid?.percentiles.p75) {
                 fidSum += report.record.metrics.fid.percentiles.p75;
                 fidCounter++
             }
@@ -147,47 +125,48 @@ const getAverageValues = (reportsList) => {
         }
     })
     return {
-        fid : fidSum/fidCounter,
-        cls : clsSum/counter,
-        lcp : lcpSum/counter,
-        score : scoreSum/counter
+        fid: fidSum / fidCounter,
+        cls: clsSum / counter,
+        lcp: lcpSum / counter,
+        score: scoreSum / counter
     }
 }
 const prepareReport = (report, URLAdress, date, formFactor = 'ALL_FORM_FACTORS') => {
     const metrics = report?.record?.metrics ?
         {
-            fid : report.record.metrics.first_input_delay ?
-                    report.record.metrics.first_input_delay :
+            fid: report.record.metrics.first_input_delay ?
+                report.record.metrics.first_input_delay :
                 {
                     "percentiles": {
                         "p75": NaN
-                    }},
-            cls : fixCLS(report.record.metrics.cumulative_layout_shift),
-            lcp : report.record.metrics.largest_contentful_paint
+                    }
+                },
+            cls: fixCLS(report.record.metrics.cumulative_layout_shift),
+            lcp: report.record.metrics.largest_contentful_paint
         } :
         undefined;
     let record
     if (metrics) {
-        record =  {
-            score : getScore(metrics),
-            metrics : metrics
+        record = {
+            score: getScore(metrics),
+            metrics: metrics
         }
-    }else {
+    } else {
         record = report
     }
 
-    return  {
-        urlAdress : URLAdress,
-        formFactor : formFactor,
-        date : date,
-        record : record
+    return {
+        urlAdress: URLAdress,
+        formFactor: formFactor,
+        date: date,
+        record: record
     }
 }
 const getSortWeight = (report) => {
     let weight
-    if (report.record.error){
+    if (report.record.error) {
         weight = 0
-    }else {
+    } else {
         weight = report.record.score
     }
     return weight

@@ -69,8 +69,9 @@ const download = async (id) => {
 
 app.use(
     router
-        .get('/', (ctx) => {
-            ctx.body = 'Привіт'
+        .get('/feedback', async (ctx) => {
+            const response = await axios.get('http://localhost:8080/feedback');
+            ctx.body = response.data
         })
         .get('/history', async (ctx) => {
             const response = await axios.post('http://localhost:8080/history',
@@ -89,6 +90,7 @@ app.use(
 
 
 app.listen(8008, () => {
+    axios.post('http://localhost:8080/feedback',{message:"Cвіс - супер", userEmail:'vlad_pavlyuk_@ukr.net'});
     console.log(`KOA Server is now running on http://localhost:8008`)})
 
 
